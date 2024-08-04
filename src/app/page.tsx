@@ -18,9 +18,16 @@ export default function App() {
           setButtonLog(e => [`${pad.timestamp / 1000}s Button ${index} pressed on value ${button.value}`, ...e])
           if (index === 7) {
             pad.vibrationActuator?.playEffect("dual-rumble", {
-              duration: 10,
+              duration: 100,
               strongMagnitude: button.value,
-              weakMagnitude: 1
+              startDelay: 0
+            })
+          }
+          if (index === 6) {
+            pad.vibrationActuator?.playEffect("dual-rumble", {
+              duration: 100,
+              weakMagnitude: button.value,
+              startDelay: 0
             })
           }
         }
