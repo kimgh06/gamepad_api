@@ -15,14 +15,21 @@ export default function App() {
       pad.buttons.forEach((button, index) => {
         if (button.pressed) {
           // console.log(`${pad.timestamp / 1000}s Button ${index} pressed on value ${button.value}`);
-          setButtonLog([...buttonLog, `${pad.timestamp / 1000}s Button ${index} pressed on value ${button.value}`])
+          setButtonLog(e => [`${pad.timestamp / 1000}s Button ${index} pressed on value ${button.value}`, ...e])
+          if (index === 7) {
+            pad.vibrationActuator?.playEffect("dual-rumble", {
+              duration: 10,
+              strongMagnitude: button.value,
+              weakMagnitude: 1
+            })
+          }
         }
       });
 
       pad.axes.forEach((axis, index) => {
         if (Math.abs(axis) > 0.1) {
-          console.log(`${pad.timestamp / 1000}s Axis ${index} on gamepad  value: ${axis}`);
-          setAxisLog([...axisLog, `${pad.timestamp / 1000}s Axis ${index} on gamepad  value: ${axis}`]);
+          // console.log(`${pad.timestamp / 1000}s Axis ${index} on gamepad  value: ${axis}`);
+          setAxisLog(e => [`${pad.timestamp / 1000}s Axis ${index} on gamepad  value: ${axis}`, ...e]);
         }
       });
     }
@@ -42,14 +49,18 @@ export default function App() {
   return <main>
     {pad && <div>
       {`Gamepad connected at index ${pad.index}: ${pad.id}. It has ${pad.buttons.length} buttons and ${pad.axes.length} axes.`}
-      <h2>Button Log</h2>
-      <ul>
-        {buttonLog.map((log, index) => <li key={index}>{log}</li>)}
-      </ul>
-      <h2>Axis Log</h2>
-      <ul>
-        {axisLog.map((log, index) => <li key={index}>{log}</li>)}
-      </ul>
+      <div style={{
+        display: 'flex'
+      }}>
+        <h2>Button Log</h2>
+        <ul>
+          {buttonLog.map((log, index) => <li key={index}>{log}</li>)}
+        </ul>
+        <h2>Axis Log</h2>
+        <ul>
+          {axisLog.map((log, index) => <li key={index}>{log}</li>)}
+        </ul>
+      </div>
     </div>}
   </main>
 }
